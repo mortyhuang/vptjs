@@ -1,8 +1,10 @@
 import { ScrollView, Text, View } from 'virtual:taro/components'
 import { lazy, Suspense, useState } from 'react'
+import { useTabPage } from '../../components/app-tab-bar/tab-page.ts'
 import { Counter } from '../../components/counter/counter.tsx'
 import { BotanicalSprig } from '../../components/botanical-sprig/botanical-sprig.tsx'
 import { NavigationBar } from '../../components/navigation-bar/navigation-bar.tsx'
+import { tabPages } from '../../tab-pages.ts'
 
 const featureCards = [
     {
@@ -28,11 +30,11 @@ const featureCards = [
 const ApiCard = lazy(() => import('./lazy/api-card.tsx'))
 
 function HomePage() {
-    // This local state intentionally demonstrates that VPT preserves React state during hot updates.
+    useTabPage(tabPages[0].path)
     const [count, setCount] = useState(0)
 
     return (
-        <View className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
+        <View className="flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-black">
             <NavigationBar title="VPT" />
             <ScrollView scrollY className="flex min-h-0 flex-1 flex-col">
                 <View className="relative flex shrink-0 flex-col items-center overflow-hidden px-5 pb-8 pt-6">
@@ -70,12 +72,8 @@ function HomePage() {
                 <View className="mx-6 mb-8 shrink-0 sm:mx-auto sm:w-64">
                     <Counter
                         count={count}
-                        onDecrement={() => {
-                            setCount((currentCount) => currentCount - 1)
-                        }}
-                        onIncrement={() => {
-                            setCount((currentCount) => currentCount + 1)
-                        }}
+                        onDecrement={() => setCount((currentCount) => currentCount - 1)}
+                        onIncrement={() => setCount((currentCount) => currentCount + 1)}
                     />
                 </View>
 
@@ -86,8 +84,7 @@ function HomePage() {
                                 Edit. Save. Stay in flow.
                             </Text>
                             <Text className="mt-3 block text-sm leading-6 text-muted">
-                                Change this counter, then edit src/pages/home/index.tsx. Your state stays exactly where
-                                you left it.
+                                VPT keeps this tab page alive while you switch tabs, so the counter stays where you left it.
                             </Text>
                         </View>
                     </View>

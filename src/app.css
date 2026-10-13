@@ -50,7 +50,12 @@ button {
 }
 
 .app-shell > .taro_page {
-    height: calc(100% - 2.5rem);
+    height: 100%;
+}
+
+.app-shell > .taro_router {
+    flex: 1;
+    min-height: 0;
 }
 
 .brand-serif {

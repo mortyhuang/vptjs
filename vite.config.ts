@@ -2,6 +2,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { defineConfig, loadEnv } from 'vite'
 import vpt, { type VptJsonObject, type VptTarget } from 'vite-plugin-taro'
+import { tabPages } from './src/tab-pages.ts'
 
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd(), 'VITE_VPT_')
@@ -10,6 +11,8 @@ export default defineConfig(({ mode }) => {
     const appId = getAppId(env, target)
 
     return {
+        // WeChat and Alipay need an empty native slot so their default tab bar never flashes before the App renders.
+        publicDir: target === 'wx' || target === 'zfb' ? fromRoot(`${target}-public`) : false,
         build: {
             outDir: fromRoot('dist', target)
         },
@@ -20,6 +23,25 @@ export default defineConfig(({ mode }) => {
                 pages: [
                     {
                         path: 'pages/home/index',
+                        prerender: true,
+                        config: createPageJson(target)
+                    },
+                    {
+                        path: 'pages/discover/index',
+                        prerender: true,
+                        config: createPageJson(target)
+                    },
+                    {
+                        path: 'pages/discover/detail/index',
+                        prerender: true,
+                        config: createPageJson(target)
+                    },
+                    {
+                        path: 'pages/profile/index',
+                        config: createPageJson(target)
+                    },
+                    {
+                        path: 'pages/profile/settings/index',
                         config: createPageJson(target)
                     }
                 ],
@@ -39,6 +61,7 @@ function createPageJson(target: VptTarget): VptJsonObject {
     switch (target) {
         case 'wx': {
             return {
+                glassEaselWebview: true,
                 navigationStyle: 'custom',
                 navigationBarTextStyle: 'black'
             }
@@ -61,6 +84,26 @@ function createPageJson(target: VptTarget): VptJsonObject {
     }
 }
 
+function createTabBar(target: VptTarget): VptJsonObject {
+    if (target === 'zfb') {
+        return {
+            customize: true,
+            textColor: '#667085',
+            selectedColor: '#26734d',
+            backgroundColor: '#f8fbf4',
+            items: tabPages.map(({ path, label }) => ({ pagePath: path, name: label }))
+        }
+    }
+
+    return {
+        custom: true,
+        color: '#667085',
+        selectedColor: '#26734d',
+        backgroundColor: '#f8fbf4',
+        list: tabPages.map(({ path, label }) => ({ pagePath: path, text: label }))
+    }
+}
+
 function createAppJson(target: VptTarget): VptJsonObject {
     switch (target) {
         case 'wx': {
@@ -69,6 +112,8 @@ function createAppJson(target: VptTarget): VptJsonObject {
                 renderer: 'skyline',
                 componentFramework: 'glass-easel',
                 glassEaselWebview: true,
+                tabBar: createTabBar(target),
+                usingComponents:{},
                 rendererOptions: {
                     skyline: {
                         defaultDisplayBlock: true,
@@ -85,6 +130,7 @@ function createAppJson(target: VptTarget): VptJsonObject {
             return {
                 lazyCodeLoading: 'renderedComponents',
                 useDynamicPlugins: true,
+                tabBar: createTabBar(target),
                 window: {
                     transparentTitle: 'always',
                     titlePenetrate: 'YES'
@@ -93,6 +139,7 @@ function createAppJson(target: VptTarget): VptJsonObject {
         }
         case 'tt': {
             return {
+                tabBar: createTabBar(target),
                 window: {
                     navigationStyle: 'custom',
                     navigationBarTextStyle: 'black'
@@ -100,7 +147,7 @@ function createAppJson(target: VptTarget): VptJsonObject {
             }
         }
         default: {
-            return {}
+            return { tabBar: createTabBar(target) }
         }
     }
 }

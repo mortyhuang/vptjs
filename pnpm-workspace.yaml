@@ -1,3 +1,6 @@
 allowBuilds:
-    # core-js postinstall only prints a donation banner; no build is needed.
-    core-js: false
+  # core-js postinstall only prints a donation banner; no build is needed.
+  core-js: false
+minimumReleaseAgeExclude:
+  - vite-plugin-taro-runtime@0.7.12
+  - vite-plugin-taro@0.7.12

@@ -4,13 +4,14 @@ import { useNavigationBar } from './use-navigation-bar.ts'
 
 interface NavigationBarProps {
     title: string
+    onBack?: () => void
 }
 
 function px(value: number): string {
     return `${Math.round(value)}px`
 }
 
-export function NavigationBar({ title }: NavigationBarProps) {
+export function NavigationBar({ title, onBack }: NavigationBarProps) {
     const { height, top, paddingX, paddingY, menuWidth } = useNavigationBar()
     const containerStyle: CSSProperties = { height: px(height) }
     const statusBarStyle: CSSProperties = { height: px(top) }
@@ -21,7 +22,16 @@ export function NavigationBar({ title }: NavigationBarProps) {
         <View className="flex w-full flex-col text-primary" style={containerStyle}>
             <View className="shrink-0" style={statusBarStyle} />
             <View className="flex w-full flex-1 flex-row items-center" style={contentStyle}>
-                <View className="flex h-full shrink-0" style={sideStyle} />
+                <View className="flex h-full shrink-0 flex-row items-center" style={sideStyle}>
+                    {onBack && (
+                        <View
+                            className="flex h-10 w-10 items-center justify-center rounded-full"
+                            onClick={onBack}
+                        >
+                            <Text className="text-3xl leading-none text-primary">‹</Text>
+                        </View>
+                    )}
+                </View>
                 <View className="flex h-full min-w-0 flex-1 flex-row items-center justify-center gap-2 text-center">
                     <Text className="brand-serif text-xl font-semibold tracking-[0.12em]">{title}</Text>
                     <View className="h-1.5 w-1.5 rounded-full bg-coral" />

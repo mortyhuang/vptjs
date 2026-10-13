@@ -90,7 +90,7 @@ import Taro from 'virtual:taro/api'
 import { Button, Text, View } from 'virtual:taro/components'
 ```
 
-不要直接安装或导入 `@tarojs/*`。在 `vite.config.ts` 中添加页面，并按当前目标修改应用与开发工具项目配置。
+当前示例包含首页、发现、我的三个 Tab 页面，以及发现详情和设置两个二级页面。三个 Tab 路由在 `vite.config.ts` 的 `tabBar` 中登记；`src/app.tsx` 统一渲染跨端 React 底栏，微信和支付宝使用空原生占位组件避免默认底栏闪现。不要直接安装或导入 `@tarojs/*`。新增页面时，在 `vite.config.ts` 中添加页面，并按当前目标修改应用与开发工具项目配置。
 
 模板包含条件编译、微信原生组件、支付宝、抖音与 Web 共用的 Taro 组件、懒加载、自定义导航栏、Tailwind CSS、CSS Modules 和全局样式示例；不需要的示例可直接删除。
 
