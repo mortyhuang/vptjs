@@ -38,6 +38,7 @@ export default defineConfig(({ mode }) => {
                     },
                     {
                         path: 'pages/profile/index',
+                        prerender: true,
                         config: createPageJson(target)
                     },
                     {
@@ -113,11 +114,12 @@ function createAppJson(target: VptTarget): VptJsonObject {
                 componentFramework: 'glass-easel',
                 glassEaselWebview: true,
                 tabBar: createTabBar(target),
-                usingComponents:{},
+                usingComponents: {},
                 rendererOptions: {
                     skyline: {
                         defaultDisplayBlock: true,
-                        defaultContentBox: true
+                        defaultContentBox: true,
+                        disableABTest: true
                     }
                 },
                 window: {
